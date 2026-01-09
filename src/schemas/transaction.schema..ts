@@ -8,23 +8,19 @@ const isValidObjectId = (id: string): boolean => ObjectId.isValid(id);
 export const createTransactionsSchema = z.object({
     description: z.string().min(1, { message: "A descrição é obrigatória" }),
     amount: z.number().positive("O valor deve ser positivo"),
-    date: z.coerce.date({
-        errorMap: () => ({ message: "Data inválida" })
-    }),
+    date: z.coerce.date().catch(() => new Date()).pipe(
+        z.date({ errorMap: () => ({ message: "Data inválida" }) })
+    ),
     categoryId: z.string().refine(isValidObjectId, {
         message: "Categoria inválida",
     }),
-    type: z.enum(["expense", "income"], {
-        errorMap: () => ({ message: "Tipo inválido" })
-    }),
+    type: z.enum(["expense", "income"]).catch("expense"),
 });
 
 export const getTransactionsSchema = z.object({
     month: z.string().optional(),
     year: z.string().optional(),
-    type: z.enum(["expense", "income"], {
-        errorMap: () => ({ message: "Tipo inválido" }), // Corrigido para "Tipo inválido"
-    }).optional(),
+    type: z.enum(["expense", "income"]).optional(),
     categoryId: z.string()
         .refine(isValidObjectId, {
             message: "Categoria inválida",

@@ -1,5 +1,5 @@
 // src/controllers/transaction/getTransactionsSummary.controller.ts
-import { TransactionType } from "@prisma/client";
+
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import type { FastifyRequest, FastifyReply } from "fastify";
@@ -7,6 +7,7 @@ import type { GetTransactionsSummaryQuery } from "../../schemas/transaction.sche
 import { prisma } from "../../config/prisma";
 import type { CategorySummary } from "../../types/category.types";
 import type { TransactionSummary } from "../../types/transaction.types";
+import { TransactionType } from "../../../generated/prisma";
 
 
 dayjs.extend(utc);
@@ -69,14 +70,13 @@ export const getTransactionsSummary = async (
 
         // Calcular porcentagens para despesas agrupadas
         const summary: TransactionSummary = {
-            totalExpense,
+            totalExpense: totalExpenses,
             totalIncome,
             balance: Number((totalIncome - totalExpenses).toFixed(2)),
-            expenseByCategory: array.from(groupedExpenses.values()).map((entry) =>({
+            expenseByCategory: Array.from(groupedExpenses.values()).map((entry) =>({
                 ...entry,
-                percentage: Number.parceFloat(((entry.amount / totalExpenses) * 100).toFixed(2)),
-            }).sort((a, b) => b.amount - a.amount),
-            ),
+                percentage: Number.parseFloat(((entry.amount / totalExpenses) * 100).toFixed(2)),
+            })).sort((a, b) => b.amount - a.amount),
         };
 
         reply.send(summary);

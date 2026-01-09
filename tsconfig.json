@@ -3,6 +3,8 @@
     "target": "ES2021", // Transpila para uma versão moderna do JavaScript (ES2021)
     "module": "commonjs", // Usa o sistema de módulos CommonJS, necessário para Node.js
     "moduleResolution": "node", // Resolve os imports como o Node faz, buscando em node_modules
+    "sourceMap": true, // Gera um mapa de origem para ajudar na depuração
+     "types": ["node"],
     "lib": [
       "ES2021.WeakRef"
     ], // Permite usar funcionalidades da linguagem baseadas no ES2021

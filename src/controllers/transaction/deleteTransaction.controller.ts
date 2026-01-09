@@ -1,8 +1,9 @@
-import { memoryUsage } from "node:process";
+
 import type { DeleteTransactionParams } from "../../schemas/transaction.schema."
 import type { FastifyRequest, FastifyReply } from "fastify";
+import { prisma } from "../../config/prisma";
 
-esport const deleteTransaction = async (
+export const deleteTransaction = async (
     request: FastifyRequest <{Params: DeleteTransactionParams}>, 
     reply: FastifyReply
 ): Promise<void> => {
