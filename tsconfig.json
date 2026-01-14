@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2021", // Transpila para uma versão moderna do JavaScript (ES2021)
-    "module": "commonjs", // Usa o sistema de módulos CommonJS, necessário para Node.js
-    "moduleResolution": "node", // Resolve os imports como o Node faz, buscando em node_modules
+    "module": "Node16", // Usa o sistema de módulos CommonJS, necessário para Node.js
+    "moduleResolution": "node16", // Resolve os imports como o Node faz, buscando em node_modules
     "sourceMap": true, // Gera um mapa de origem para ajudar na depuração
      "types": ["node"],
     "lib": [

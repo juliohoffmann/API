@@ -12,7 +12,7 @@ export const getTransaction = async (
     request: FastifyRequest<{ Querystring: GetTransactionQuery }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const userId= "1212325256FTRTR"; // Considere obter isso do request.user.id após autenticação
+    const userId= request.user.id;
     if (!userId) {
         reply.status(400).send({ error: "Usuário não encontrado" });
         return;

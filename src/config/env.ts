@@ -4,6 +4,7 @@ import {z} from 'zod';
 
 dotenv.config();
 
+
 const envSchema = z.object({
     PORT: z.string().transform(Number).default(3001),
     // CORREÇÃO AQUI: Passe a mensagem de erro como um objeto para o método min()
@@ -11,7 +12,10 @@ const envSchema = z.object({
     NODE_ENV: z.enum(['dev', 'test', 'production'],{
         message: 'NODE_ENV deve ser dev, test ou production',
     }),
-});
+    FIREBASE_PROJECT_ID: z.string().optional(),
+    FIREBASE_PRIVATE_KEY: z.string().optional(),
+    FIREBASE_CLIENT_EMAIL: z.string().optional(),
+}); 
 
 const _env = envSchema.safeParse(process.env);
 

@@ -1,10 +1,12 @@
     // src/server.ts
     import app from "./app.ts";
     import {env} from "./config/env.ts";
+    import initializeFirebaseAdmin from "./config/firebase.ts";
     import connectToPrisma from "./config/prisma.ts"; // <-- REMOVA AS CHAVES AQUI
     import { initializeGlobalCategories } from "./services/globalCategories.service.ts";
 
     const PORT = env.PORT;
+    initializeFirebaseAdmin();
 
     const startServer = async () => {
       try {

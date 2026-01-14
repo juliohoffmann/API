@@ -2,12 +2,13 @@
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { createTransactionsSchema } from "../../schemas/transaction.schema.";
 import { prisma } from "../../config/prisma"; // Certifique-se de que o caminho para 'prisma' está correto
-import { TransactionType } from "@prisma/client"; // Importe TransactionType para tipagem
+// Importe TransactionType para tipagem
+import { TransactionType } from "../../../generated/prisma";
 
 const createTransaction = async (request:FastifyRequest, reply:FastifyReply):Promise<void> => {
-    const userId= "1212325256FTRTR"; // Considere obter isso do request.user.id após autenticação
+    const userId= request.userId;
     if (!userId) {
-        reply.status(400).send({ error: "Usuário não encontrado" });
+        reply.status(403).send({ error: "Usuário não encontrado" });
         return;
     }
 
@@ -24,7 +25,7 @@ const createTransaction = async (request:FastifyRequest, reply:FastifyReply):Pro
         const category = await prisma.category.findFirst({
             where: {
                 id: transaction.categoryId,
-                type: transaction.type as TransactionType // Adicione o cast para TransactionType
+                type: transaction.type as TransactionType// Adicione o cast para TransactionType
             },
         });
 
