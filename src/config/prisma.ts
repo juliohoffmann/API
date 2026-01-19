@@ -1,24 +1,37 @@
-    // src/config/prisma.ts
-    import { PrismaClient } from '../../generated/prisma';
+import { PrismaClient } from '@prisma/client';
+import 'dotenv/config';
 
-    console.log('DATABASE_URL (in prisma.ts):', process.env.DATABASE_URL ? 'Loaded' : 'Not Loaded');
+console.log('DATABASE_URL (in prisma.ts):', process.env.DATABASE_URL ? 'Loaded' : 'Not Loaded');
+const databaseUrl = process.env.DATABASE_URL;
 
-    const prisma = new PrismaClient({
-      log: ['query', 'info', 'warn', 'error'],
-    });
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL is not defined in the environment variables.');
+}
 
-    // Exporta a função de conexão como default
-    const connectToPrisma = async() => {
-        try {
-            await prisma.$connect()
-            console.log('✅Conectado ao banco de dados')
-        } catch (error) {
-            console.error('🚨Falha ao se conectar', error)
-        }
-    }
+const prisma = new PrismaClient({
+  log: ['query', 'info', 'warn', 'error'],
+});
 
-    export { prisma }; // Exporta a instância do PrismaClient nomeadamente
-    export default connectToPrisma; // Exporta a função de conexão como default
+const connectToPrisma = async () => {
+  try {
+    await prisma.$connect();
+    console.log('✅ Conectado ao banco de dados');
+  } catch (error) {
+    console.error('🚨 Falha ao se conectar', error);
+  }
+};
+
+export { prisma };
+export default connectToPrisma;
+
+
+
+
+
+
+
+
+
 
 
 

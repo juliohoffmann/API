@@ -29,3 +29,4 @@ request: FastifyRequest,
     }
 
 };
+export default authMiddleware;

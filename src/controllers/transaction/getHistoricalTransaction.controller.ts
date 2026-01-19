@@ -1,8 +1,12 @@
-import type { FastifyReply, FastifyRequest } from "fastify";
-import type { GetHistoricalTransactionsQuery } from "../../schemas/transaction.schema.";
-import { Dayjs } from "dayjs";
+ import type { FastifyReply, FastifyRequest } from "fastify";
+import type { GetHistoricalTransactionsQuery } from "../../schemas/transaction.schema";
+import utc from "dayjs/plugin/utc";
+import { prisma } from "../../config/prisma";
+import dayjs from "dayjs";
+import "dayjs/locale/pt-br";
 
-
+dayjs.locale("pt-br");
+dayjs.extend(utc);
 export const getHistoricalTransaction = async (
     request: FastifyRequest <{Querystring: GetHistoricalTransactionsQuery}>,
     reply: FastifyReply
@@ -15,8 +19,8 @@ export const getHistoricalTransaction = async (
 const { month, year, months=6 } = request.query;
 
 const baseDate= new Date(year, month-1, 1);
-const startDate = Dayjs(baseDate).subtract(months -1, "month").startOf("month").toDate();
-const endDate =  dayjs(baseDate).endOf("month").toDate();
+const startDate = dayjs.utc(baseDate).subtract(months -1, "month").startOf("month").toDate();
+const endDate = dayjs.utc(baseDate).endOf("month").toDate();
 
 try {
     const transactions = await prisma.transaction.findMany({
@@ -32,10 +36,34 @@ try {
             type: true,
             date: true,
         }
-              
+
     });
-    reply.status(200).send(transactions);
+const monthlyData = Array.from({length:months}, (_, i) => {
+    const date= dayjs.utc(baseDate).subtract(months -1 -i, "month");
+
+    return {
+        name: date.format("MMM/YYYY"),
+        income: 0,
+        expenses: 0 
+    }; 
+}) 
+transactions.forEach((transaction: { date: string | number | Date | dayjs.Dayjs | null | undefined; type: string; amount: number; }) => {
+    const monthKey = dayjs.utc(transaction.date).format("MMM/YYYY");
+
+    const monthData = monthlyData.find(m => m.name === monthKey);
+    if (monthData) {
+        if (transaction.type === "income") {
+            monthData.income += transaction.amount;
+        } else {
+            monthData.expenses += transaction.amount;
+        }
+
+    }
+  });
+
+
+    reply.send({history: monthlyData});
 } catch (error) {
     reply.status(500).send({ error: "Erro ao buscar transações" });
 }
-};
+};                   

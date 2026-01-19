@@ -1,5 +1,5 @@
 
-export interface CategorySummary{
+export interface categorySummary{
     categoryId: string;
     categoryName: string;
     categoryColor: string;

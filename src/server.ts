@@ -1,9 +1,10 @@
-    // src/server.ts
-    import app from "./app.ts";
-    import {env} from "./config/env.ts";
-    import initializeFirebaseAdmin from "./config/firebase.ts";
-    import connectToPrisma from "./config/prisma.ts"; // <-- REMOVA AS CHAVES AQUI
-    import { initializeGlobalCategories } from "./services/globalCategories.service.ts";
+  import 'dotenv/config';
+    import app from "./app";
+    import {env} from "./config/env";
+    import initializeFirebaseAdmin from "./config/firebase";
+    import connectToPrisma from "./config/prisma"; 
+    import { initializeGlobalCategories } from "./services/globalCategories.service";
+    
 
     const PORT = env.PORT;
     initializeFirebaseAdmin();
@@ -11,7 +12,7 @@
     const startServer = async () => {
       try {
         await connectToPrisma();
-        // Chame initializeGlobalCategories sem argumentos
+        
         await initializeGlobalCategories();
         await app.listen({ port: PORT }).then(() => {
           console.log(`Servidor rodando na porta ${PORT}`);

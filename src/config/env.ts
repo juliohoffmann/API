@@ -1,12 +1,12 @@
 // src/config/env.ts
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import {z} from 'zod';
 
-dotenv.config();
+
 
 
 const envSchema = z.object({
-    PORT: z.string().transform(Number).default(3001),
+    PORT: z.string().transform(Number).default('3001'),
     // CORREÇÃO AQUI: Passe a mensagem de erro como um objeto para o método min()
     DATABASE_URL: z.string().min(5, "DATABASE_URL é obrigatório"),
     NODE_ENV: z.enum(['dev', 'test', 'production'],{

@@ -1,5 +1,5 @@
-import type { TransactionType } from "../../generated/prisma";
-import type { CategorySummary } from "./category.types";
+import { TransactionType } from '@prisma/client';
+import type { categorySummary } from "./category.types";
 
 
 
@@ -18,7 +18,6 @@ export interface TransactionSummary {
     totalExpense: number;
     totalIncome: number;
     balance: number;
-    expenseByCategory:CategorySummary[];
-
-
+    expenseByCategory:categorySummary[];
 }
+

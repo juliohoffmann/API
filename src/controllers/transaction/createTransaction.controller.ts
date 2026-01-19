@@ -1,9 +1,9 @@
 // src/controllers/transaction/createTrasaction.controller.ts
 import type { FastifyRequest, FastifyReply } from "fastify";
-import { createTransactionsSchema } from "../../schemas/transaction.schema.";
-import { prisma } from "../../config/prisma"; // Certifique-se de que o caminho para 'prisma' está correto
+import { createTransactionsSchema } from "../../schemas/transaction.schema";
+import { prisma } from "../../config/prisma"; 
 // Importe TransactionType para tipagem
-import { TransactionType } from "../../../generated/prisma";
+import { TransactionType } from '@prisma/client';
 
 const createTransaction = async (request:FastifyRequest, reply:FastifyReply):Promise<void> => {
     const userId= request.userId;
@@ -14,7 +14,7 @@ const createTransaction = async (request:FastifyRequest, reply:FastifyReply):Pro
 
     const result = createTransactionsSchema.safeParse(request.body);
     if (!result.success) {
-        const errorMessages = result.error.errors[0].message || "Validacao falhou";
+        const errorMessages = result.error.issues[0].message || "Validacao falhou";
         reply.status(400).send({ error: errorMessages });
         return;
     }
@@ -38,16 +38,16 @@ const createTransaction = async (request:FastifyRequest, reply:FastifyReply):Pro
 
         // CORREÇÃO AQUI:
         const newTransaction = await prisma.transaction.create({
-            data: { // <-- Use 'data' como a propriedade principal
+            data: { 
                 description: transaction.description,
                 amount: transaction.amount,
                 date: parsedDate,
-                type: transaction.type as TransactionType, // Adicione o cast
-                userId: userId, // Use o userId obtido
+                type: transaction.type as TransactionType, 
+                userId: userId,
                 categoryId: transaction.categoryId,
             },
-            include: { // <-- Use 'include' com 'i' minúsculo
-                Category: true, // O nome do relacionamento no seu schema.prisma deve ser 'Category'
+            include: { 
+                category: true, 
             },
         });
 

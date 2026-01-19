@@ -1,7 +1,7 @@
 // src/routes/index.ts
 import type { FastifyInstance } from "fastify";
-import categoryRoutes from "./category.routes.ts";
-import transactionRoutes from "./transaction.routes.ts"; // Importe as rotas de transação
+import categoryRoutes from "./category.routes";
+import transactionRoutes from "./transaction.routes"; // Importe as rotas de transação
 
 async function routes(fastify: FastifyInstance): Promise<void> {
   fastify.get("/health", async () => {

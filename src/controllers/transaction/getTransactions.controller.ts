@@ -2,17 +2,17 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import type { FastifyRequest, FastifyReply } from "fastify";
-import type { GetTransactionQuery } from "../../schemas/transaction.schema.";
+import type { GetTransactionsQuery } from "../../schemas/transaction.schema";
 import type { TransactionFilter } from "../../types/transaction.types";
-import { prisma } from "../../config/prisma"; // Certifique-se de importar o prisma
+import { prisma } from "../../config/prisma"; 
 
 dayjs.extend(utc);
 
 export const getTransaction = async (
-    request: FastifyRequest<{ Querystring: GetTransactionQuery }>,
+    request: FastifyRequest<{ Querystring: GetTransactionsQuery }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const userId= request.user.id;
+    const userId= request.userId;
     if (!userId) {
         reply.status(400).send({ error: "Usuário não encontrado" });
         return;
@@ -22,7 +22,7 @@ export const getTransaction = async (
     const filters : TransactionFilter = {userId};
 
     if (month && year) {
-        // A lógica do dayjs.utc().startOf("month") e .endOf("month") está correta para UTC
+        
         const startDate = dayjs.utc(`${year}-${month}-01`).startOf("month").toDate();
         const endDate = dayjs.utc(`${year}-${month}-01`).endOf("month").toDate();
         filters.date = { gte: startDate, lte: endDate };
@@ -41,8 +41,8 @@ export const getTransaction = async (
             where: filters,
             orderBy: { date: "desc" },
             include: {
-                // CORREÇÃO AQUI: Use 'Category' (com 'C' maiúsculo) e remova a chave extra
-                Category: { // Nome do relacionamento deve ser o nome do modelo no schema.prisma
+                
+                category: { 
                     select: {
                         color: true,
                         name: true,

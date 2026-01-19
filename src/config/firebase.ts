@@ -15,7 +15,7 @@ const initializeFirebaseAdmin = ():void => {
         admin.initializeApp({
             credential: admin.credential.cert({
                 clientEmail: FIREBASE_CLIENT_EMAIL,
-                privateKey: FIREBASE_PRIVATE_KEY,
+                privateKey: FIREBASE_PRIVATE_KEY!,
                 projectId: FIREBASE_PROJECT_ID,
             }),
         });

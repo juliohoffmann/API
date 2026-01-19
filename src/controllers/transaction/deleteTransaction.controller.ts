@@ -1,5 +1,5 @@
 
-import type { DeleteTransactionParams } from "../../schemas/transaction.schema."
+import type { DeleteTransactionParams } from "../../schemas/transaction.schema"
 import type { FastifyRequest, FastifyReply } from "fastify";
 import { prisma } from "../../config/prisma";
 
@@ -7,11 +7,11 @@ export const deleteTransaction = async (
     request: FastifyRequest <{Params: DeleteTransactionParams}>, 
     reply: FastifyReply
 ): Promise<void> => {
-      const userId= request.user.id;
+      const userId= request.userId;
       const {id} = request.params;
 
     if (!userId) {
-        reply.status(400).send({ error: "Usuário não encontrado" });
+        reply.status(401).send({ error: "Usuário não encontrado" });
         return;
     }
     try {

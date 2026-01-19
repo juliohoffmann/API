@@ -3,11 +3,11 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import type { FastifyRequest, FastifyReply } from "fastify";
-import type { GetTransactionsSummaryQuery } from "../../schemas/transaction.schema.";
+import type { GetTransactionsSummaryQuery } from "../../schemas/transaction.schema";
 import { prisma } from "../../config/prisma";
-import type { CategorySummary } from "../../types/category.types";
+import type { categorySummary } from "../../types/category.types";
 import type { TransactionSummary } from "../../types/transaction.types";
-import { TransactionType } from "../../../generated/prisma";
+import { TransactionType } from '@prisma/client';
 
 
 dayjs.extend(utc);
@@ -43,20 +43,20 @@ export const getTransactionsSummary = async (
             },
           
             include: {
-                Category: true,
+                category: true,
             },
         });
 
         let totalIncome = 0;
         let totalExpenses = 0;
-        const groupedExpenses = new Map<string, CategorySummary>(); 
+        const groupedExpenses = new Map<string, categorySummary>(); 
 
         for (const transaction of transactions) {
             if (transaction.type === TransactionType.expense) {
-                const existing = groupedExpenses.get(transaction.categoryId) ?? {
+                const existing = groupedExpenses.get(transaction.Id) ?? {
                     categoryId: transaction.categoryId,
-                    categoryName: transaction.Category.name,
-                    categoryColor: transaction.Category.color,
+                    categoryName: transaction.category.name,
+                    categoryColor: transaction.category.color,
                     amount: 0,
                     percentage: 0,
                 };

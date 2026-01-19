@@ -1,11 +1,12 @@
     // src/services/globalCategories.service.ts
-    import { type Category } from "@prisma/client";
+   
     // Importe a instância 'prisma' nomeadamente do seu arquivo de configuração
     import { prisma } from "../config/prisma"; // <-- Adicione esta linha
+import { category } from "../../generated/prisma";
 
-    type GlobalCategoryInput = Pick<Category, "name" | "color" | "type">;
+    type GlobalCategoryInput = Pick<category, "name" | "color" | "type">;
 
-    export const initializeGlobalCategories = async (): Promise<Category[]> => {
+    export const initializeGlobalCategories = async (): Promise<category[]> => {
       const globalCategories: GlobalCategoryInput[] = [
         // Despesas
         { name: "Alimentação", color: "#FF5733", type: "expense" },
@@ -23,18 +24,18 @@
         { name: "Outros", color: "#B033FF", type: "income" },
       ];
 
-      const createCategories: Category[] = [];
+      const createCategories: category[] = [];
       for (const category of globalCategories) {
         try {
-          // Agora prisma.Category deve estar definido
-          const existing = await prisma.Category.findFirst({
+          
+          const existing = await prisma.category.findFirst({
             where: {
               name: category.name,
               type: category.type,
             },
           });
           if (!existing) {
-            const newCategory = await prisma.Category.create({ data: category });
+            const newCategory = await prisma.category.create({ data: category });
             createCategories.push(newCategory);
           } else {
             createCategories.push(existing);
